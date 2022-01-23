@@ -33,6 +33,7 @@ function script_description()
 end
 
 function script_properties()
+
     src_properties = obs.obs_properties_create()
 
     local p =
@@ -47,6 +48,7 @@ function script_properties()
     local obs_sources = obs.obs_enum_sources()
 
     if obs_sources ~= nil then
+	
         obs.obs_property_list_add_string(p, "Devre Dışı", "disable")
 
         for _, source in ipairs(obs_sources) do
@@ -54,11 +56,13 @@ function script_properties()
 
             obs.obs_property_list_add_string(p, name, name)
         end
+		
     end
 
     obs.source_list_release(obs_sources)
 
     return src_properties
+	
 end
 
 function script_load(settings)
@@ -66,6 +70,7 @@ function script_load(settings)
 end
 
 function script_tick(seconds)
+
     if source_name == "disable" then
         return
     end
@@ -73,19 +78,21 @@ function script_tick(seconds)
     local source = obs.obs_get_source_by_name(source_name)
 
     if source ~= nil then
+	
         local state = obs.obs_source_media_get_state(source)
 
         if last_state ~= state then
+		
             last_state = state
 
-            if
-                state == obs.OBS_MEDIA_STATE_STOPPED or state == obs.OBS_MEDIA_STATE_ENDED or
-                    state == obs.OBS_MEDIA_STATE_ERROR
-             then
+            if state == obs.OBS_MEDIA_STATE_STOPPED or state == obs.OBS_MEDIA_STATE_ENDED or state == obs.OBS_MEDIA_STATE_ERROR then
                 obs.obs_source_media_next(source)
             end
+			
         end
+		
     end
 
     obs.obs_source_release(source)
+	
 end
